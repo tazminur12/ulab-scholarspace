@@ -6,7 +6,7 @@ import Footer from '@/components/Footer';
 
 export default function LayoutWrapper({ children }) {
   const pathname = usePathname();
-  const isDashboard = pathname?.startsWith('/dashboard');
+  const isDashboard = pathname?.startsWith('/dashboard') || pathname?.startsWith('/admin-dashboard') || pathname?.startsWith('/notebook') || pathname?.startsWith('/exam-routine') || pathname?.startsWith('/study-plan') || pathname?.startsWith('/slides-library');
 
   return (
     <>

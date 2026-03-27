@@ -12,6 +12,7 @@ export default function DashboardLayout({ children }) {
   const navigation = [
     { name: 'Dashboard', href: '/dashboard', icon: 'fa-solid fa-house' },
     { name: 'My Notes', href: '/notebook', icon: 'fa-solid fa-book' },
+    { name: 'Slides Library', href: '/slides-library', icon: 'fa-solid fa-person-chalkboard' },
     { name: 'Exam Routine', href: '/exam-routine', icon: 'fa-solid fa-clock' },
     { name: 'Study Plan', href: '/study-plan', icon: 'fa-solid fa-calendar-check' },
     { name: 'Discussions', href: '/discussions', icon: 'fa-solid fa-comments' },
