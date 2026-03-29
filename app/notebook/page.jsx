@@ -12,6 +12,8 @@ export default function DigitalNotebook() {
   const [viewMode, setViewMode] = useState('grid');
   const [isSaving, setIsSaving] = useState(false);
   const [showYoutubeModal, setShowYoutubeModal] = useState(false);
+  const [youtubeSearchQuery, setYoutubeSearchQuery] = useState('');
+  const [youtubeSearchResults, setYoutubeSearchResults] = useState([]);
   const [youtubeUrl, setYoutubeUrl] = useState('');
 
   // active note state
@@ -179,13 +181,15 @@ export default function DigitalNotebook() {
     }, 0);
   };
 
-  const handleYoutubeEmbed = () => {
-    if (!youtubeUrl) return;
+  const handleYoutubeEmbed = (customUrl = '') => {
+    const urlToEmbed = customUrl || youtubeUrl;
+    if (!urlToEmbed) return;
     // Extract video ID
     let videoId = '';
     try {
-      if (youtubeUrl.includes('youtu.be/')) videoId = youtubeUrl.split('youtu.be/')[1].split('?')[0];
-      else if (youtubeUrl.includes('v=')) videoId = youtubeUrl.split('v=')[1].split('&')[0];
+      if (urlToEmbed.includes('youtu.be/')) videoId = urlToEmbed.split('youtu.be/')[1].split('?')[0];
+      else if (urlToEmbed.includes('v=')) videoId = urlToEmbed.split('v=')[1].split('&')[0];
+      else videoId = urlToEmbed; // allow passing raw ID
     } catch { console.error('Invalid URL'); }
 
     if (videoId) {
@@ -194,6 +198,20 @@ export default function DigitalNotebook() {
     }
     setShowYoutubeModal(false);
     setYoutubeUrl('');
+    setYoutubeSearchQuery('');
+    setYoutubeSearchResults([]);
+  };
+
+  const handleYoutubeSearch = (e) => {
+    e.preventDefault();
+    if (!youtubeSearchQuery.trim()) return;
+    // Mocking YouTube Search 
+    const mockResults = [
+      { id: 'dQw4w9WgXcQ', title: `${youtubeSearchQuery} Crash Course for Beginners`, channel: 'CodeCamp', duration: '12:05', thumbnail: 'https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=500&q=80' },
+      { id: 'tgbNymZ7vqY', title: `Understanding ${youtubeSearchQuery} in 10 Minutes`, channel: 'ScienceDaily', duration: '10:14', thumbnail: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=500&q=80' },
+      { id: '9bZkp7q19f0', title: `Advanced ${youtubeSearchQuery} Techniques`, channel: 'UniversityPlus', duration: '45:30', thumbnail: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=500&q=80' },
+    ];
+    setYoutubeSearchResults(mockResults);
   };
 
   // Filter logic
@@ -523,28 +541,72 @@ export default function DigitalNotebook() {
 
       {/* YouTube Modal */}
       {showYoutubeModal && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-xl shadow-xl w-full max-w-md overflow-hidden">
-            <div className="p-4 border-b border-gray-100 flex justify-between items-center bg-gray-50">
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4 backdrop-blur-sm">
+          <div className="bg-white rounded-xl shadow-xl w-full max-w-2xl max-h-[90vh] flex flex-col overflow-hidden">
+            <div className="p-4 border-b border-gray-100 flex justify-between items-center bg-gray-50 shrink-0">
               <h3 className="font-bold text-gray-800 flex items-center gap-2">
-                <i className="fa-brands fa-youtube text-red-600"></i> Embed YouTube Video
+                <i className="fa-brands fa-youtube text-red-600"></i> YouTube Search & Embed
               </h3>
               <button onClick={() => setShowYoutubeModal(false)} className="text-gray-400 hover:text-gray-600">
-                <i className="fa-solid fa-times"></i>
+                <i className="fa-solid fa-times text-xl"></i>
               </button>
             </div>
-            <div className="p-5">
-              <label className="block text-sm font-medium text-gray-700 mb-1">YouTube Video URL</label>
-              <input 
-                type="text" 
-                value={youtubeUrl}
-                onChange={(e) => setYoutubeUrl(e.target.value)}
-                placeholder="https://www.youtube.com/watch?v=..."
-                className="w-full px-4 py-2 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none mb-4"
-              />
-              <div className="flex justify-end gap-2 mt-4">
-                <button onClick={() => setShowYoutubeModal(false)} className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition">Cancel</button>
-                <button onClick={handleYoutubeEmbed} className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition">Embed Video</button>
+            
+            <div className="p-5 overflow-y-auto flex-1 flex flex-col">
+              <form onSubmit={handleYoutubeSearch} className="mb-6">
+                <div className="flex gap-2">
+                  <input 
+                    type="text" 
+                    value={youtubeSearchQuery}
+                    onChange={(e) => setYoutubeSearchQuery(e.target.value)}
+                    placeholder="Search YouTube for topics..."
+                    className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:outline-none"
+                  />
+                  <button type="submit" className="px-5 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 font-medium whitespace-nowrap">
+                    <i className="fa-solid fa-search mr-2"></i>Search
+                  </button>
+                </div>
+              </form>
+
+              {youtubeSearchResults.length > 0 && (
+                <div className="space-y-4 mb-6 flex-1">
+                  <h4 className="text-sm font-bold text-gray-500 uppercase tracking-wider mb-2">Search Results</h4>
+                  {youtubeSearchResults.map((video) => (
+                    <div key={video.id} className="flex gap-4 p-3 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 hover:border-red-200 transition group items-center">
+                      <div className="w-32 h-20 bg-gray-200 rounded-md overflow-hidden shrink-0 relative">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img src={video.thumbnail} alt={video.title} className="w-full h-full object-cover" />
+                        <span className="absolute bottom-1 right-1 bg-black/80 text-white text-[10px] font-bold px-1.5 py-0.5 rounded">{video.duration}</span>
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <h4 className="font-semibold text-gray-800 text-sm line-clamp-2 truncate">{video.title}</h4>
+                        <p className="text-xs text-gray-500 mt-1 flex items-center gap-1">
+                          <i className="fa-regular fa-circle-user"></i> {video.channel}
+                        </p>
+                      </div>
+                      <button 
+                        onClick={() => handleYoutubeEmbed(video.id)}
+                        className="px-4 py-2 bg-gray-100 text-gray-700 text-sm font-medium rounded-lg hover:bg-red-50 hover:text-red-600 opacity-0 group-hover:opacity-100 transition"
+                      >
+                         Embed Video
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              <div className="mt-auto pt-6 border-t border-gray-100">
+                <label className="block text-sm font-medium text-gray-700 mb-2">Or paste a specific YouTube URL</label>
+                <div className="flex gap-2">
+                  <input 
+                    type="text" 
+                    value={youtubeUrl}
+                    onChange={(e) => setYoutubeUrl(e.target.value)}
+                    placeholder="https://www.youtube.com/watch?v=..."
+                    className="flex-1 px-4 py-2 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                  />
+                  <button onClick={() => handleYoutubeEmbed()} className="px-5 py-2 bg-gray-800 text-white rounded-lg hover:bg-gray-900 transition whitespace-nowrap">Embed Link</button>
+                </div>
               </div>
             </div>
           </div>

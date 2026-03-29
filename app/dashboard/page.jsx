@@ -41,11 +41,11 @@ export default function StudentDashboard() {
     { id: 3, subject: 'Data Structures', question: 'Understanding Binary Trees', answers: 12 }
   ], []);
 
-  const todayReminders = useMemo(() => [
+  const [todayReminders, setTodayReminders] = useState([
     { id: 1, title: 'Web Dev Assignment Due', type: 'task', time: '5:00 PM' },
     { id: 2, title: 'Study Group Meeting', type: 'event', time: '7:00 PM' },
     { id: 3, title: 'Review DSA Chapter 3', type: 'study', time: '8:00 PM' }
-  ], []);
+  ]);
 
   const subjects = useMemo(() => [
     { name: 'Data Structures', progress: 75 },
@@ -61,6 +61,17 @@ export default function StudentDashboard() {
   ], []);
 
   useEffect(() => {
+    // Sync reminders
+    const savedReminders = localStorage.getItem('ulab_reminders');
+    if (savedReminders) {
+      const parsed = JSON.parse(savedReminders);
+      const todayStr = new Date().toISOString().split('T')[0];
+      const todayData = parsed.filter(r => r.date === todayStr && !r.completed).slice(0, 3);
+      if (todayData.length > 0) {
+        setTodayReminders(todayData.map(r => ({ id: r.id, title: r.title, type: r.type.toLowerCase(), time: r.time })));
+      }
+    }
+
     // Initialize state
     const storedUser = localStorage.getItem('loggedInUser');
     if (storedUser) {
@@ -116,6 +127,14 @@ export default function StudentDashboard() {
 
   const handleFindPartner = () => {
     router.push('/find-study-partner');
+  };
+
+  const handleResourceFinder = () => {
+    router.push('/resource-finder');
+  };
+
+  const handleEvents = () => {
+    router.push('/events');
   };
 
   const handleCompleteReminder = (id) => {
@@ -285,18 +304,24 @@ export default function StudentDashboard() {
             {/* Quick Actions Menu */}
             <div className="bg-white rounded-2xl shadow-lg p-6">
               <h2 className="text-xl font-bold text-gray-900 font-poppins mb-4">⚡ Quick Actions</h2>
-              <div className="space-y-2">
-                <button onClick={handleCreateNote} className="w-full bg-linear-to-r from-blue-500 to-blue-600 text-white font-semibold py-3 px-4 rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all shadow-md">
-                  📄 Create Note
+              <div className="grid grid-cols-2 gap-2">
+                <button onClick={handleCreateNote} className="w-full bg-linear-to-r from-blue-500 to-blue-600 text-white font-semibold py-3 px-2 rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all shadow-md text-sm">
+                  📄 Add Note
                 </button>
-                <button onClick={handleUploadPDF} className="w-full bg-linear-to-r from-purple-500 to-purple-600 text-white font-semibold py-3 px-4 rounded-lg hover:from-purple-600 hover:to-purple-700 transition-all shadow-md">
-                  📤 Upload PDF
+                <button onClick={handleResourceFinder} className="w-full bg-linear-to-r from-indigo-500 to-indigo-600 text-white font-semibold py-3 px-2 rounded-lg hover:from-indigo-600 hover:to-indigo-700 transition-all shadow-md text-sm">
+                  🔍 Resources
                 </button>
-                <button onClick={handleAskAI} className="w-full bg-linear-to-r from-pink-500 to-pink-600 text-white font-semibold py-3 px-4 rounded-lg hover:from-pink-600 hover:to-pink-700 transition-all shadow-md">
+                <button onClick={handleEvents} className="w-full bg-linear-to-r from-orange-500 to-orange-600 text-white font-semibold py-3 px-2 rounded-lg hover:from-orange-600 hover:to-orange-700 transition-all shadow-md text-sm">
+                  📅 Events
+                </button>
+                <button onClick={handleAskAI} className="w-full bg-linear-to-r from-pink-500 to-pink-600 text-white font-semibold py-3 px-2 rounded-lg hover:from-pink-600 hover:to-pink-700 transition-all shadow-md text-sm">
                   🤖 Ask AI
                 </button>
-                <button onClick={handleFindPartner} className="w-full bg-linear-to-r from-green-500 to-green-600 text-white font-semibold py-3 px-4 rounded-lg hover:from-green-600 hover:to-green-700 transition-all shadow-md">
-                  👥 Find Partner
+                <button onClick={handleFindPartner} className="w-full bg-linear-to-r from-green-500 to-green-600 text-white font-semibold py-3 px-2 rounded-lg hover:from-green-600 hover:to-green-700 transition-all shadow-md text-sm">
+                  👥 Partner
+                </button>
+                <button onClick={handleUploadPDF} className="w-full bg-linear-to-r from-purple-500 to-purple-600 text-white font-semibold py-3 px-2 rounded-lg hover:from-purple-600 hover:to-purple-700 transition-all shadow-md text-sm">
+                  📤 PDF 
                 </button>
               </div>
             </div>
