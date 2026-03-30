@@ -161,6 +161,21 @@ export default function DigitalNotebook() {
     URL.revokeObjectURL(url);
   };
 
+  // Integration: Summarize This Note -> store content to localStorage and open summarizer
+  const summarizeThisNote = () => {
+    const payload = {
+      title: title || 'Untitled Note',
+      text: content || ''
+    };
+    try {
+      localStorage.setItem('ulab_summarizer_prefill', JSON.stringify(payload));
+    } catch (e) {
+      console.error('Could not save prefill', e);
+    }
+    // navigate to summarizer
+    window.location.href = '/ai-summarizer';
+  };
+
   const insertMarkdown = (prefix, suffix = '') => {
     const textarea = document.getElementById('note-editor-txt');
     if (!textarea) return;
@@ -532,6 +547,9 @@ export default function DigitalNotebook() {
                 </button>
                 <button onClick={() => deleteNote(activeNoteId)} className="w-full py-2 bg-red-50 text-red-600 border border-red-100 rounded-lg text-sm font-medium hover:bg-red-100 transition mt-4 flex items-center justify-center gap-2">
                   <i className="fa-solid fa-trash"></i> Move to Trash
+                </button>
+                <button onClick={summarizeThisNote} className="w-full py-2 bg-green-50 text-green-600 border border-green-100 rounded-lg text-sm font-medium hover:bg-green-100 transition flex items-center justify-center gap-2">
+                  <i className="fa-solid fa-robot"></i> Summarize This Note
                 </button>
               </div>
             </div>
