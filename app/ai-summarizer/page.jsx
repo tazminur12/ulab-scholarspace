@@ -52,7 +52,8 @@ export default function AISummarizer() {
 
   // Mock notes/pdfs from localStorage or fallback
   const myNotes = (() => {
-    const s = localStorage.getItem('ulab_notes');
+    if (typeof window === 'undefined') return [];
+    const s = window.localStorage.getItem('ulab_notes');
     if (!s) return [
       { id: 'n1', title: 'OS - Deadlocks', text: 'Deadlock is a state where processes are blocked. The conditions are mutual exclusion, hold and wait, no preemption, and circular wait. Banker algorithm is used for avoidance.' },
       { id: 'n2', title: 'DB - Normalization', text: 'Normalization reduces redundancy. 1NF, 2NF, 3NF explained. Functional dependencies and anomalies.' }
@@ -61,7 +62,8 @@ export default function AISummarizer() {
   })();
 
   const myPdfs = (() => {
-    const s = localStorage.getItem('ulab_pdfs');
+    if (typeof window === 'undefined') return [];
+    const s = window.localStorage.getItem('ulab_pdfs');
     if (!s) return [
       { id: 'p1', title: 'OS Concepts (slide)', pages: 45 },
       { id: 'p2', title: 'DBMS Past Papers', pages: 12 }

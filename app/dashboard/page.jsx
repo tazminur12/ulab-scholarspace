@@ -126,7 +126,15 @@ export default function StudentDashboard() {
   };
 
   const handleFindPartner = () => {
-    router.push('/find-study-partner');
+    router.push('/study-groups');
+  };
+
+  const handleCourseReviews = () => {
+    router.push('/course-reviews');
+  };
+
+  const handleQuestionBank = () => {
+    router.push('/question-bank');
   };
 
   const handleResourceFinder = () => {
@@ -135,6 +143,14 @@ export default function StudentDashboard() {
 
   const handleEvents = () => {
     router.push('/events');
+  };
+
+  const handleAiQuiz = () => {
+    router.push('/ai-quiz');
+  };
+
+  const handleAiDoubtSolver = () => {
+    router.push('/ai-doubt-solver');
   };
 
   const handleCompleteReminder = (id) => {
@@ -314,11 +330,23 @@ export default function StudentDashboard() {
                 <button onClick={handleEvents} className="w-full bg-linear-to-r from-orange-500 to-orange-600 text-white font-semibold py-3 px-2 rounded-lg hover:from-orange-600 hover:to-orange-700 transition-all shadow-md text-sm">
                   📅 Events
                 </button>
+                <button onClick={handleAiQuiz} className="w-full bg-linear-to-r from-purple-500 to-purple-600 text-white font-semibold py-3 px-2 rounded-lg hover:from-purple-600 hover:to-purple-700 transition-all shadow-md text-sm">
+                  🧠 AI Quiz
+                </button>
+                <button onClick={handleAiDoubtSolver} className="w-full bg-linear-to-r from-yellow-500 to-yellow-600 text-white font-semibold py-3 px-2 rounded-lg hover:from-yellow-600 hover:to-yellow-700 transition-all shadow-md text-sm">
+                  🎓 Doubt Solver
+                </button>
                 <button onClick={handleAskAI} className="w-full bg-linear-to-r from-pink-500 to-pink-600 text-white font-semibold py-3 px-2 rounded-lg hover:from-pink-600 hover:to-pink-700 transition-all shadow-md text-sm">
                   🤖 Ask AI
                 </button>
                 <button onClick={handleFindPartner} className="w-full bg-linear-to-r from-green-500 to-green-600 text-white font-semibold py-3 px-2 rounded-lg hover:from-green-600 hover:to-green-700 transition-all shadow-md text-sm">
                   👥 Partner
+                </button>
+                <button onClick={handleCourseReviews} className="w-full bg-linear-to-r from-indigo-500 to-indigo-600 text-white font-semibold py-3 px-2 rounded-lg hover:from-indigo-600 hover:to-indigo-700 transition-all shadow-md text-sm">
+                  ⭐ Reviews
+                </button>
+                <button onClick={handleQuestionBank} className="w-full bg-linear-to-r from-teal-500 to-teal-600 text-white font-semibold py-3 px-2 rounded-lg hover:from-teal-600 hover:to-teal-700 transition-all shadow-md text-sm">
+                  📦 Questions
                 </button>
                 <button onClick={handleUploadPDF} className="w-full bg-linear-to-r from-purple-500 to-purple-600 text-white font-semibold py-3 px-2 rounded-lg hover:from-purple-600 hover:to-purple-700 transition-all shadow-md text-sm">
                   📤 PDF 
